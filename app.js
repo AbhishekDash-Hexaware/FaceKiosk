@@ -28,7 +28,9 @@ app.get('/facerec', (req, res) => {
 })
 
 app.get('/data', (req, res) => {
-    res.send("hello new");
+    console.log("got hit");
+    console.log(req.body);
+    res.sendStatus(200)
 })
 
 
