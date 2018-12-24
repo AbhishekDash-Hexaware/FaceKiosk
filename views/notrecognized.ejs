@@ -1,0 +1,32 @@
+<html>
+    <head>
+            <link href="assets/css/Newstyle.css" rel="stylesheet" type="text/css" />
+    </head>
+
+<body >
+<!--     
+        <iframe width="420" height="315"
+        src="https://www.youtube.com/embed/sF8mifCWVIxU?autoplay=1">
+        </iframe> -->
+        <form id="form2"  method="POST" action="/enroll" onsubmit="return myFunction();">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-2">
+                    <input type="text" class="keyboard form-control"   required autocomplete="off" name="ParticipantName"  tabindex="1" autofocus
+                        id="participantname" placeholder="Participant Name " style="position: relative;top: 299px;left: 310px;"value=""/>
+                        <input id="imagepath" type="hidden" name="imagepath" value="<%= path%>"/>
+                        <input id="imageData" type="hidden" name="imageData" value="<%= imagedata%>"/>  
+                       
+                       
+                        <br>
+                        
+                </div>
+                <div class="col-md-4 " >
+                            <input type="submit" class="btn btn-primary" id="btn" style="position :relative; top:300px; left: -100px; border-radius: 10% "/>    
+
+                </div>
+            </div>
+
+        </form>
+
+</body>
+</html>
