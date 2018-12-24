@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var rekHandler = require('./rekHandler');
 var app = express();
 
-var port = process.env.PORT || 8123;
+var port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname+"/public"));
 app.set('view engine', 'ejs');
@@ -80,7 +80,7 @@ app.post('/upload',(req,res) =>{
 
 
 
-app.listen(3000);
+app.listen(port);
 console.log("Server Running Successfully at port " + port);
 
 module.exports = app
