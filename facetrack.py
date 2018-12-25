@@ -1,7 +1,6 @@
 import cv2
 import sys
 import winsound
-# import os
 import requests 
 
 frequency = 2500  # Set Frequency To 2500 Hertz
@@ -32,11 +31,12 @@ while True:
         #Distance filter
         if(w>100):
             framecount+=1
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 355, 0), 2)
             if(framecount==30):
                 # os.system("start D:\PlayGround\kiosk-app\welcome.mp3")
                 winsound.Beep(frequency, duration)
                 r=requests.get("http://localhost:3000/data")
+                
                 print(r.status_code)
                 framecount=0
         else:

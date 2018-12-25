@@ -8,12 +8,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
+
+    <title>Bootstrap Modal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
     <!-- FAVICON -->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- TITLE -->
     <title>Hexaware's Florida event</title>
+
+    <!-- <Socket> -->
+    <script src="/socket.io/socket.io.js"></script>
 
     <!-- DESCRIPTION -->
     <meta name="description" content="Responsive Parallax Event & Music Theme" />
@@ -36,12 +48,35 @@
     <link href="assets/css/venobox.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <link href="assets/css/queries.css" rel="stylesheet" />
-<script>
-    function myfunction(){
-        window.location="https://facekiosk.herokuapp.com/facerec"
-    }
-        </script>
+    <script>
+        function myfunction() {
+            window.location = "https://facekiosk.herokuapp.com/facerec"
+        }
+    </script>
 </head>
+
+
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
 <body id="top" data-spy="scroll" data-target=".header" data-offset="80">
     <!-- !!!!!!!!!!!!!! -->
@@ -112,10 +147,11 @@
             <hr id="title_hr" />
             <p class="wow animated fadeInUp" data-wow-duration="1s" data-wow-delay="1s">&lt Short description &gt</p>
             <!-- <a class="learn-more-btn btn-effect wow animated fadeIn" data-wow-duration="0.5s" data-wow-delay="1.5s" data-scroll href="#swag">&lt get pass &gt</a> -->
-           
-            <form onclick="return myfunction()" >
-                    <button id= "myButton" class="learn-more-btn btn-effect wow animated fadeIn" data-wow-duration="0.5s" data-wow-delay="1.5s"> GET PASS </button>
-                </form>
+
+            <form onclick="return myfunction()">
+                <button id="myButton" class="learn-more-btn btn-effect wow animated fadeIn" data-wow-duration="0.5s"
+                    data-wow-delay="1.5s"> GET PASS </button>
+            </form>
         </div>
     </section>
     <!--/HOME-->
@@ -176,7 +212,7 @@
                 </div>
             </div>
 
-            
+
         </div>
         <!--row ends here-->
     </section>
@@ -207,18 +243,18 @@
                 </nav>
                 <div class="content">
                     <section id="section-1">
-                                           </section>
+                    </section>
                     <section id="section-2">
-                                          </section>
+                    </section>
                     <section id="section-3">
-                                           </section>
+                    </section>
                 </div><!-- /content -->
             </div><!-- /tabs -->
         </div>
     </section>
 
 
-   
+
     <!--SPEAKERS-->
     <section class="team text-center section-padding" id="team">
         <div class="container">
@@ -498,7 +534,7 @@
     </section>
     <!--/SPEAKER-->
 
-   
+
     <!--SPONSORS-->
     <div id="sponsers" class="ignite-cta text-center section-padding">
         <div class="container">
@@ -595,9 +631,9 @@
                 <td></td>
                 <td></td>
             </tr>
-                   </table>
+        </table>
     </div>
-        <!--FOOTER-->
+    <!--FOOTER-->
     <footer>
         <div class="container">
             <div class="row">
@@ -697,6 +733,17 @@
     <script src="https://webrtc.github.io/adapter/adapter-5.0.4.js" type="text/javascript"></script>
     <!-- <script src="utils.js" type="text/javascript"></script> -->
 
+
+
+    <script>
+        var socket = io('http://localhost:8000');
+        socket.on('custom_event', function (data) {
+            console.log("connected",data);
+            // alert("ohhh yeah got it");
+            //Do whatever you want with the data on the client
+            $('#myModal').modal('show');
+        });
+    </script>
 
     <script type="text/javascript">
         // Loading AudioContext.
@@ -861,6 +908,3 @@
 </body>
 
 </html>
-
-
-
