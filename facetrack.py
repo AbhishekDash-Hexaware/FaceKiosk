@@ -2,6 +2,26 @@ import cv2
 import sys
 import winsound
 import requests 
+import base64
+import json
+
+
+
+
+def rekognizer(imagedata):
+
+    url = "https://rzxagt9l02.execute-api.us-east-1.amazonaws.com/v1/query"
+
+    headers = {
+        'Content-Type': "application/json",
+        'cache-control': "no-cache"
+        }
+
+    response = requests.request("POST", url, data=json.dumps({"gallery":"tempid_cto_org_dev","image":imagedata}), headers=headers)
+
+    print(response.text)
+
+
 
 frequency = 2500  # Set Frequency To 2500 Hertz
 duration = 1000  # Set Duration To 1000 ms == 1 second
@@ -32,12 +52,18 @@ while True:
         if(w>100):
             framecount+=1
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 355, 0), 2)
+            
             if(framecount==30):
-                # os.system("start D:\PlayGround\kiosk-app\welcome.mp3")
+
                 winsound.Beep(frequency, duration)
+                # print(frame)
+                retval, buffer = cv2.imencode('.jpg', frame)
+                base64Image = "data:image/jpeg;base64," + str(base64.b64encode(buffer).decode('utf8'))
+                # print(base64Image)
+                rekognizer(base64Image)
                 # r=requests.get("http://localhost:3000/data")
-                
                 # print(r.status_code)
+
                 framecount=0
         else:
             framecount=0
@@ -52,3 +78,5 @@ while True:
 # When everything is done, release the capture
 video_capture.release()
 cv2.destroyAllWindows()
+
+
