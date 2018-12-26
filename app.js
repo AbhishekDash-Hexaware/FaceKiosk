@@ -26,10 +26,11 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 io.on('connection', function (socket) {
 
     console.log(`user ${socket.id} connected`);
-    // socket.emit('custom_event', { "hello": "client" });
+    socket.emit('custom_event', { "hello": "client" });
     socketID = socket.id;
     module.exports= socketID;
     console.log("here")
+    // socket.broadcast.emit("custom_event",{"hello":"world"});
     socket.on('disconnect', function () {
         console.log(`user ${socket.id} disconnected`);
     });

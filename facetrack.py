@@ -35,9 +35,9 @@ while True:
             if(framecount==30):
                 # os.system("start D:\PlayGround\kiosk-app\welcome.mp3")
                 winsound.Beep(frequency, duration)
-                r=requests.get("http://localhost:3000/data")
+                # r=requests.get("http://localhost:3000/data")
                 
-                print(r.status_code)
+                # print(r.status_code)
                 framecount=0
         else:
             framecount=0
