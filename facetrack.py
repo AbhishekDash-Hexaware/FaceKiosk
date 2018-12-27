@@ -8,7 +8,7 @@ duration = 1000  # Set Duration To 1000 ms == 1 second
 
 framecount=0
 
-faceCascade = cv2.CascadeClassifier("D:\PlayGround\kiosk-app\public\haarcascade_frontalface_default.xml")
+faceCascade = cv2.CascadeClassifier("public\haarcascade_frontalface_default.xml")
 
 video_capture = cv2.VideoCapture(0)
 
