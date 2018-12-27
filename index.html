@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="microsoft.cognitiveservices.speech.sdk.bundle.js.map"></script>
+    
+    <script src ="microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script> -->
+
+
 
 
     <!-- FAVICON -->
@@ -112,7 +117,7 @@
                         <!-- <li style="margin: 25px 10px"><button id="startAndStop">START</button></li> -->
                         <li style="margin: 25px 10px"> <button id="speechsdkStartContinuousRecognition">start()</button></li>
                         <li style="margin: 25px 10px"> <button id="speechsdkStopContinuousRecognition" disabled="disabled">STOP
-                            stop()</button></li>
+                                stop()</button></li>
 
                     </ul>
                 </div>
@@ -637,6 +642,21 @@
             </tr>
         </table>
     </div>
+
+    <audio id="LunchAudio">
+        <source src="https://res.cloudinary.com/hexai/video/upload/v1545137087/LunchIntent.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="BreakfastAudio">
+        <source src="https://res.cloudinary.com/hexai/video/upload/v1545137067/BreakfastIntent.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="HelloAudio">
+        <source src="https://res.cloudinary.com/hexai/video/upload/v1544785921/transcript_7_1.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+
     <!--FOOTER-->
     <footer>
         <div class="container">
@@ -723,21 +743,16 @@
     <script type="text/javascript" src="assets/js/jquery.mobile-1.4.3.js"></script>
     <script type="text/javascript" src="assets/js/jquery.superslides.js"></script>
 
+    <!--  -->
+
     <!-- INITIALIZATION  -->
     <script type="text/javascript" src="assets/js/main.js"></script>
 
-    <script src="utils.js" type="text/javascript"></script>
-
 
     <script type="text/javascript" src="assets/js/init.js"></script>
+    <script type="text/javascript" src="microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
+    <!-- <script type="text/javascript" src="assets/js/microsft-speech.js"></script> -->
 
-    <!-- SPEECH API  -->
-    <!-- <script type="text/javascript" src="assets/js/speech.js"></script> -->
-    <!-- !!!!!!!!!!!!!! -->
-    <!-- <script src="https://webrtc.github.io/adapter/adapter-5.0.4.js" type="text/javascript"></script> -->
-    <!-- <script src="utils.js" type="text/javascript"></script> -->
- 
-    <!-- facerek-python\microsoft.cognitiveservices.speech.sdk.bundle.js -->
 
 
     <script>
@@ -749,76 +764,46 @@
             $('#myModal').modal('show');
         });
     </script>
-
-   <script src="microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
     <script type="text/javascript">
-        var authorizationEndpoint = "token.php";
-        function RequestAuthorizationToken() {
-            if (authorizationEndpoint) {
-                var a = new XMLHttpRequest();
-                a.open("GET", authorizationEndpoint);
-                a.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                a.send("");
-                a.onload = function () {
-                    var token = JSON.parse(atob(this.responseText.split(".")[1]));
-                    regionOptions.value = token.region;
-                    authorizationToken = this.responseText;
-                    key.disabled = true;
-                    key.value = "using authorization token (hit F5 to refresh)";
-                    console.log("Got an authorization token: " + token);
-                }
-            }
-        }
-
-        // On document load resolve the Speech SDK dependency
-        function Initialize(onComplete) {
-            if (!!window.SpeechSDK) {
-                document.getElementById('content').style.display = 'block';
-                document.getElementById('warning').style.display = 'none';
-                onComplete(window.SpeechSDK);
-            }
-        }
-        var SpeechSDK;
-        var recognizer;
-        var reco;
-        var sdkStartContinousRecognitionBtn, sdkStopContinousRecognitionBtn;
-        var inputsource = "Mic"
-        var regionOptions = "southeastasia"
-        var key = "dffe370190ab42d3ab8fd78a4a7f8e58"
-        var languageOptions = "en-IN"
-        var languageTargetOptions = "en-IN"
-        var soundContext = undefined;
-        try {
-            soundContext = new AudioContext();
-        }
-        catch (e) {
-            console.log("no sound context found, no audio output. " + e);
-        }
         document.addEventListener("DOMContentLoaded", function () {
+            var reco;
+            var speechConfig;
+            var inputsource = "Mic"
+            var regionOptions = "southeastasia"
+            var key = "dffe370190ab42d3ab8fd78a4a7f8e58"
+            var languageOptions = "en-IN"
+            var languageTargetOptions = "en-IN"
+            var sdkStartContinousRecognitionBtn, sdkStopContinousRecognitionBtn;
+            var soundContext = undefined;
+            try {
+                soundContext = new AudioContext();
+                console.log(soundContext)
+            }
+            catch (e) {
+                console.log("no sound context found, no audio output. " + e);
+            }
+            var LunchAudio = document.getElementById("LunchAudio");
+            var BreakfastAudio = document.getElementById("BreakfastAudio")
+            var HelloAudio =document.getElementById("HelloAudio")
             sdkStartContinousRecognitionBtn = document.getElementById("speechsdkStartContinuousRecognition");
             sdkStopContinousRecognitionBtn = document.getElementById("speechsdkStopContinuousRecognition");
             // Starts continuous speech recognition
             sdkStartContinousRecognitionBtn.addEventListener("click", function () {
+                console.log("start button pressed")
                 var lastRecognized = "";
-                var speechConfig;
                 speechConfig = SpeechSDK.SpeechConfig.fromSubscription(key, regionOptions);
                 speechConfig.speechRecognitionLanguage = languageOptions;
-               
-                
                 var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                
                 reco = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
                 reco.recognizing = function (s, e) {
-                    console.log(e);
                     var status = "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    console.log(status)
                     var phrase = lastRecognized + e.result.text;
-                    console.log(phrase)
                 };
                 reco.recognized = function (s, e) {
+                    console.log("inside recognized")
                     var statusDiv1
                     console.log(e);
-                    // Indicates that recognizable speech was not detected, and that recognition is done.
+                    //Indicates that recognizable speech was not detected, and that recognition is done.
                     if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
                         var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(e.result);
                         statusDiv1 = "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason] + "\r\n";
@@ -829,9 +814,54 @@
                     }
                     lastRecognized += e.result.text + "\r\n";
                     var phraseDiv1 = lastRecognized;
-                    console.log(statusDiv1)
+                     console.log(statusDiv1)
                     console.log(phraseDiv1)
-                };
+                    var transcript = e.result.text;
+                    transcript = transcript.trim();
+                    console.log(transcript);
+                    jQuery.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "https://api.dialogflow.com/v1/query",
+                        qs: { v: '20150910' },
+                        headers: {
+                            'cache-control': 'no-cache',
+                            authorization: 'Bearer ' + '2f1667eb74634f249ebf236c6992e593',
+                            'content-type': 'application/json'
+                        },
+                        data: JSON.stringify({
+                            lang: 'en',
+                            query: transcript,
+                            sessionId: 12345
+                        }),
+
+                        error: function (error) {
+                            console.log(error)
+                            console.log("Internal Server Error");
+                        },
+                        success: function (result) {
+                            console.log(result)
+                            if (result.result.action == "input.welcome") {
+                                console.log("welcome intent")
+                                console.log("song playing");
+                                HelloAudio.play()
+                            }
+                            if (result.result.action == "breakfast") {
+                                console.log("breakfast  intent")
+                                console.log("song playing"); 
+                                BreakfastAudio.play()
+                            }
+                            if (result.result.action == "Lunch") {
+                                console.log("lunch intent")
+                                console.log("song playing");
+                                LunchAudio.play()     
+                            }
+                            console.log("sucess")
+                        },
+                        dataType: "JSON",
+                    })
+
+                }
                 reco.canceled = function (s, e) {
                     console.log(e);
                     var statusDiv2;
@@ -841,7 +871,6 @@
                         statusDiv2 = e.errorDetails;
                         console.log(statusDiv2)
                     }
-                    console.log("\r\n")
 
                 };
                 // Signals that a new session has started with the speech service
@@ -874,13 +903,14 @@
                     statusDiv6 += "(speechEndDetected) SessionId: " + e.sessionId + "\r\n";
                     console.log(statusDiv6)
                 };
-                // Starts recognition
                 reco.startContinuousRecognitionAsync();
+
                 sdkStartContinousRecognitionBtn.disabled = true;
                 sdkStopContinousRecognitionBtn.disabled = false;
             });
             // Stops recognition and disposes of resources.
             sdkStopContinousRecognitionBtn.addEventListener("click", function () {
+                console.log("stopped")
                 reco.stopContinuousRecognitionAsync(
                     function () {
                         reco.close();
@@ -892,17 +922,6 @@
                     });
                 sdkStartContinousRecognitionBtn.disabled = false;
                 sdkStopContinousRecognitionBtn.disabled = true;
-            });
-            // Starts continuous speech translation.
-           
-            Initialize(function (speechSdk) {
-                SpeechSDK = speechSdk;
-                sdkStartContinousRecognitionBtn.disabled = false;
-                // sdkStartRecognizeOnceAsyncBtn.disabled = false;
-                // in case we have a function for getting an authorization token, call it.
-                if (typeof RequestAuthorizationToken === "function") {
-                    RequestAuthorizationToken();
-                }
             });
         });
 
